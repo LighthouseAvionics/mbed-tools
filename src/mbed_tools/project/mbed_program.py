@@ -83,6 +83,8 @@ class MbedProgram:
         """
         if mbed_os_path is None:
             program_root = _find_program_root(dir_path)
+            if program_root is None:
+                program_root = Path('.')
             mbed_os_path = program_root / MBED_OS_DIR_NAME
         else:
             program_root = dir_path
@@ -164,8 +166,4 @@ def _find_program_root(cwd: Path) -> Path:
         potential_root = potential_root.parent
 
     logger.debug("No mbed-os.lib file found.")
-    raise ProgramNotFound(
-        f"No program found from {cwd.resolve()} to {cwd.resolve().anchor}. Please set the directory to a program "
-        "directory containing an mbed-os.lib file. You can also set the directory to a program subdirectory if there "
-        "is an mbed-os.lib file at the root of your program's directory tree."
-    )
+    return None
